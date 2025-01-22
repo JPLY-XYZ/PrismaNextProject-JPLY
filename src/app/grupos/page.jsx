@@ -16,7 +16,7 @@ async function PaginaGrupos() {
           <p><b>Nombre: </b>{grupo.nombre}</p>
           <p><b>Tutor: </b>{grupo.tutor}</p>
           <p><b>Aula: </b>{grupo.aula}</p>
-          <p><Link href='/grupos/1'>VER</Link></p>
+          <p><Link href={`/grupos/${grupo.id}`}>VER</Link></p>
         </div>
       ))}
     </div>

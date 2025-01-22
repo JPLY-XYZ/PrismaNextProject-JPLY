@@ -4,8 +4,8 @@ import Link from "next/link";
 const prisma = new PrismaClient()
 
 async function PaginaGrupo({ params }) {
-    const parametros = await params;
-    const grupo = await prisma.grupo.findUnique({where: {id: Number(parametros.id)}})
+    const {id} = await params;
+    const grupo = await prisma.grupo.findUnique({where: {id: +id}})
     return ( 
         <div>
             <Link href="/grupos"><b>GRUPOS</b></Link>
