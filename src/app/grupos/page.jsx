@@ -7,6 +7,7 @@ const prisma = new PrismaClient();
 async function PaginaGrupos() {
     const grupos = await prisma.grupo.findMany()
   
+    console.log(grupos)
 
   return (
     <div>
