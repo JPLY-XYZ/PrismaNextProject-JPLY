@@ -18,6 +18,8 @@ model Grupo {
   nombre String
   tutor  String
   aula   String
+
+  @@map("grupos")
 }
 
 model Alumno {
@@ -27,6 +29,8 @@ model Alumno {
   foto            String?
   tutorLegal      String   @default("Desconocido")
   grupoId         Int
+
+   @@map("estudiantes")
 }
 
 model Asignatura {
@@ -34,4 +38,6 @@ model Asignatura {
   nombre   String
   profesor String
   horas    Int
+
+   @@map("asignaturas")
 }
