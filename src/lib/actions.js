@@ -3,6 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import { revalidatePath } from 'next/cache';
 import { v2 as cloudinary } from 'cloudinary';
 import path from 'node:path'
+import { redirect } from 'next/dist/server/api-utils';
 
 cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -102,17 +103,23 @@ async function GenerateImgURI(file) {
 
 async function modificarAlumno(formData) {
 
+    const foto = formData.get('foto');
+    const data = {
+        nombre: formData.get('nombre'),
+        fechaNacimiento: new Date(formData.get('fechaNacimiento')),
+        tutorLegal: formData.get('tutorLegal'),
+        grupoId: +formData.get('grupoId')
+    };
+
+    if (foto.size > 0) {
+        data.foto = await GenerateImgURI(foto);
+    }
+
     await prisma.alumno.update({
         where: {
             id: +formData.get('id')
         },
-        data: {
-            nombre: formData.get('nombre'),
-            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
-            foto: formData.get('foto'),
-            tutorLegal: formData.get('tutorLegal'),
-            grupoId: +formData.get('grupoId')
-        }
+        data: data
     });
 
     revalidatePath('/estudiantes/' + +formData.get('id'));
@@ -124,9 +131,9 @@ async function eliminarAlumno(formData) {
         where: {
             id: +formData.get('id')
         }
-    });
+    }); 
 
-    revalidatePath('/grupos');
+    revalidatePath('/estudiantes');
 }
 
 // ASIGNATURAS

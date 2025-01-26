@@ -1,7 +1,7 @@
 import Modal from "@/components/Modal";
-import { insertarAlumno } from "@/lib/actions";
+import { eliminarAlumno, insertarAlumno } from "@/lib/actions";
 import { PrismaClient } from "@prisma/client";
-import { CircleX, CopyPlus, Home, MessageSquareShare } from "lucide-react";
+import { CircleX, CopyPlus, Home, MessageSquareShare, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -107,13 +107,19 @@ async function Lista() {
                 {new Date(estudiante.fechaNacimiento).toLocaleDateString()}
               </td>
               <td className="border px-4 py-2">{estudiante.tutorLegal}</td>
-              <td className="border px-4 py-2 text-center">
+              <td className="border px-4 py-2 text-center flex flex-col items-center gap-3">
                 <Link
                   className="flex gap-3 justify-center text-blue-500 hover:text-black"
                   href={`/estudiantes/${estudiante.id}`}
                 >
                   VER <MessageSquareShare />
                 </Link>
+                <form action={eliminarAlumno}>
+                  <input type="hidden" name="id" defaultValue={estudiante.id} />
+                  <button className="flex gap-3 justify-center text-red-500 hover:text-black">
+                    ELIMINAR <Trash2 />
+                  </button>
+                </form>
               </td>
             </tr>
           ))}
