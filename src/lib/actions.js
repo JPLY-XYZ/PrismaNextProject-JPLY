@@ -1,11 +1,20 @@
 'use server'
 import { PrismaClient } from '@prisma/client';
-
 import { revalidatePath } from 'next/cache';
+import { v2 as cloudinary } from 'cloudinary';
+import path from 'node:path'
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 
 
 const prisma = new PrismaClient();
 
+// GRUPOS
 
 async function insertarGrupo(formData) {
 
@@ -35,7 +44,7 @@ async function modificarGrupo(formData) {
         }
     });
 
-    revalidatePath('/grupos/'+ +formData.get('id'));
+    revalidatePath('/grupos/' + +formData.get('id'));
 }
 
 async function eliminarGrupo(formData) {
@@ -45,18 +54,19 @@ async function eliminarGrupo(formData) {
             id: +formData.get('id')
         }
     });
-    
+
     revalidatePath('/grupos');
 }
 
-async function insertarAlumno(formData) {
+// ALUMNOS
 
+async function insertarAlumno(formData) {
 
     await prisma.alumno.create({
         data: {
             nombre: formData.get('nombre'),
-            fechaNacimiento: formData.get('fechaNacimiento'),
-            foto: formData.get('foto'),
+            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
+            foto: await GenerateImgURI(formData.get('foto')),
             tutorLegal: formData.get('tutorLegal'),
             grupoId: +formData.get('grupoId')
         }
@@ -64,6 +74,30 @@ async function insertarAlumno(formData) {
 
     revalidatePath('/estudiantes');
 
+}
+
+
+async function GenerateImgURI(file) {
+    try {
+        const fileBuffer = await file.arrayBuffer();
+
+        let mime = file.type;
+        let encoding = 'base64';
+        let base64Data = Buffer.from(fileBuffer).toString('base64');
+        let fileUri = 'data:' + mime + ';' + encoding + ',' + base64Data;
+
+        const result = await cloudinary.uploader.upload(fileUri, {
+            asset_folder: 'escuela',
+            public_id: path.parse(file.name).name,
+            invalidate: true,
+            format: 'webp'
+        });
+
+        return result.secure_url;
+    } catch (error) {
+        console.error('Error uploading image to Cloudinary:', error);
+        throw error; // O maneja el error como prefieras
+    }
 }
 
 async function modificarAlumno(formData) {
@@ -74,14 +108,14 @@ async function modificarAlumno(formData) {
         },
         data: {
             nombre: formData.get('nombre'),
-            fechaNacimiento: formData.get('fechaNacimiento'),
+            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
             foto: formData.get('foto'),
             tutorLegal: formData.get('tutorLegal'),
             grupoId: +formData.get('grupoId')
         }
     });
 
-    revalidatePath('/estudiantes/'+ +formData.get('id'));
+    revalidatePath('/estudiantes/' + +formData.get('id'));
 }
 
 async function eliminarAlumno(formData) {
@@ -91,13 +125,56 @@ async function eliminarAlumno(formData) {
             id: +formData.get('id')
         }
     });
-    
+
     revalidatePath('/grupos');
 }
 
+// ASIGNATURAS
+
+async function insertarAsignatura(formData) {
 
 
+    await prisma.asignatura.create({
+        data: {
+            nombre: formData.get('nombre'),
+            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
+            foto: formData.get('foto'),
+            tutorLegal: formData.get('tutorLegal'),
+            grupoId: +formData.get('grupoId')
+        }
+    });
 
+    revalidatePath('/estudiantes');
 
+}
 
-export { insertarGrupo, modificarGrupo, eliminarGrupo, insertarAlumno, modificarAlumno, eliminarAlumno};
+async function modificarAsignatura(formData) {
+
+    await prisma.asignatura.update({
+        where: {
+            id: +formData.get('id')
+        },
+        data: {
+            nombre: formData.get('nombre'),
+            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
+            foto: formData.get('foto'),
+            tutorLegal: formData.get('tutorLegal'),
+            grupoId: +formData.get('grupoId')
+        }
+    });
+
+    revalidatePath('/estudiantes/' + +formData.get('id'));
+}
+
+async function eliminarAsignatura(formData) {
+
+    await prisma.asignatura.delete({
+        where: {
+            id: +formData.get('id')
+        }
+    });
+
+    revalidatePath('/grupos');
+}
+
+export { insertarGrupo, modificarGrupo, eliminarGrupo, insertarAlumno, modificarAlumno, eliminarAlumno, insertarAsignatura, modificarAsignatura, eliminarAsignatura };

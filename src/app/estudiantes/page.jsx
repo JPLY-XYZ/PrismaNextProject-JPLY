@@ -64,6 +64,7 @@ async function Lista() {
           />
           <input
             required
+            type="file"
             className="border p-2 rounded w-full text-black"
             name="foto"
             placeholder="URL de la Foto"

@@ -24,6 +24,7 @@ async function Lista() {
   const asignaturas = await prisma.asignatura.findMany();
 
   return (
+    <>
     <table className="table-auto w-full mt-5 border-collapse border shadow-lg">
       <thead>
         <tr className="">
@@ -48,5 +49,12 @@ async function Lista() {
         ))}
       </tbody>
     </table>
+    {estudiantes.length === 0 && (
+        <div className="flex mt-4 gap-4">
+          <CircleX className="animate-pulse" />
+          NO HAY DATOS PARA MOSTRAR <CircleX className="animate-pulse" />
+        </div>
+      )}
+    </>
   );
 }
