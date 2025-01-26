@@ -2,6 +2,7 @@ import Modal from "@/components/Modal";
 import { eliminarGrupo, insertarGrupo } from "@/lib/actions";
 import { PrismaClient } from "@prisma/client";
 import {
+  CircleX,
   CopyPlus,
   Home,
   MessageSquareShare,
@@ -51,7 +52,6 @@ async function Lista() {
           </div>
         }
       >
-         
         <form
           action={insertarGrupo}
           className="flex flex-col items-center justify-center mt-5 gap-3 p-5 border rounded shadow-lg"
@@ -117,6 +117,12 @@ async function Lista() {
           ))}
         </tbody>
       </table>
+      {grupos.length === 0 && (
+        <div className="flex mt-4 gap-4">
+          <CircleX className="animate-pulse" />
+          NO HAY DATOS PARA MOSTRAR <CircleX className="animate-pulse" />
+        </div>
+      )}
     </>
   );
 }

@@ -1,6 +1,8 @@
 'use server'
 import { PrismaClient } from '@prisma/client';
+
 import { revalidatePath } from 'next/cache';
+
 
 const prisma = new PrismaClient();
 
@@ -47,4 +49,55 @@ async function eliminarGrupo(formData) {
     revalidatePath('/grupos');
 }
 
-export { insertarGrupo, modificarGrupo, eliminarGrupo };
+async function insertarAlumno(formData) {
+
+
+    await prisma.alumno.create({
+        data: {
+            nombre: formData.get('nombre'),
+            fechaNacimiento: formData.get('fechaNacimiento'),
+            foto: formData.get('foto'),
+            tutorLegal: formData.get('tutorLegal'),
+            grupoId: +formData.get('grupoId')
+        }
+    });
+
+    revalidatePath('/estudiantes');
+
+}
+
+async function modificarAlumno(formData) {
+
+    await prisma.alumno.update({
+        where: {
+            id: +formData.get('id')
+        },
+        data: {
+            nombre: formData.get('nombre'),
+            fechaNacimiento: formData.get('fechaNacimiento'),
+            foto: formData.get('foto'),
+            tutorLegal: formData.get('tutorLegal'),
+            grupoId: +formData.get('grupoId')
+        }
+    });
+
+    revalidatePath('/estudiantes/'+ +formData.get('id'));
+}
+
+async function eliminarAlumno(formData) {
+
+    await prisma.alumno.delete({
+        where: {
+            id: +formData.get('id')
+        }
+    });
+    
+    revalidatePath('/grupos');
+}
+
+
+
+
+
+
+export { insertarGrupo, modificarGrupo, eliminarGrupo, insertarAlumno, modificarAlumno, eliminarAlumno};

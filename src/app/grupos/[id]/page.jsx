@@ -33,7 +33,7 @@ export default PaginaGrupo;
 
 async function Lista({ params }) {
   const { id } = params;
-  const grupo = await prisma.grupo.findUnique({ where: { id: +id } });
+  const grupo = await prisma.grupo.findUnique({ where: { id: +id }});
   return (
     <>
       <div className="flex justify-end">
