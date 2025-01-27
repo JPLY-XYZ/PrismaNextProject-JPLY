@@ -3,6 +3,7 @@ import { eliminarAlumno, modificarAlumno } from "@/lib/actions";
 import { PrismaClient } from "@prisma/client";
 import { CopyPlus, Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { Suspense } from "react";
 
 const prisma = new PrismaClient();
@@ -32,8 +33,13 @@ async function PaginaGrupo({ params }) {
 export default PaginaGrupo;
 
 async function Lista({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const estudiante = await prisma.alumno.findUnique({ where: { id: +id } });
+
+   if(!estudiante){
+      redirect('/estudiantes');
+    }
+
   return (
     <div className="bg-white shadow-md rounded-lg p-6 mt-4">
       <div className="flex justify-end">

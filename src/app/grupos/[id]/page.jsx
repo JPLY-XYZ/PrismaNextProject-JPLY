@@ -3,6 +3,7 @@ import { eliminarGrupo, modificarGrupo } from "@/lib/actions";
 import { PrismaClient } from "@prisma/client";
 import { SquarePen, Trash2, Undo2 } from "lucide-react";
 import Link from "next/link";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 
 const prisma = new PrismaClient();
@@ -32,8 +33,13 @@ async function PaginaGrupo({ params }) {
 export default PaginaGrupo;
 
 async function Lista({ params }) {
-  const { id } = params;
+  const { id } = await params;
   const grupo = await prisma.grupo.findUnique({ where: { id: +id }});
+
+  if(!grupo){
+    redirect('/grupos');
+  }
+
   return (
     <>
       <div className="flex justify-end">

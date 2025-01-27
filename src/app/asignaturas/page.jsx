@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { Home, MessageSquareShare } from "lucide-react";
+import { CircleX, Home, MessageSquareShare } from "lucide-react";
 import Link from "next/link";
 import { Suspense } from "react";
 
@@ -49,7 +49,7 @@ async function Lista() {
         ))}
       </tbody>
     </table>
-    {estudiantes.length === 0 && (
+    {asignaturas.length === 0 && (
         <div className="flex mt-4 gap-4">
           <CircleX className="animate-pulse" />
           NO HAY DATOS PARA MOSTRAR <CircleX className="animate-pulse" />
