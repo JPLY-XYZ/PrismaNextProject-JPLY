@@ -39,7 +39,6 @@ async function Lista({ params }) {
   if(!grupo){
     redirect('/grupos');
   }
-
   return (
     <>
       <div className="flex justify-end">
