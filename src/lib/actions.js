@@ -144,10 +144,8 @@ async function insertarAsignatura(formData) {
     await prisma.asignatura.create({
         data: {
             nombre: formData.get('nombre'),
-            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
-            foto: formData.get('foto'),
-            tutorLegal: formData.get('tutorLegal'),
-            grupoId: +formData.get('grupoId')
+            profesor: formData.get('profesor'),
+            horas: +formData.get('horas')
         }
     });
 
@@ -163,10 +161,8 @@ async function modificarAsignatura(formData) {
         },
         data: {
             nombre: formData.get('nombre'),
-            fechaNacimiento: new Date(formData.get('fechaNacimiento')),
-            foto: formData.get('foto'),
-            tutorLegal: formData.get('tutorLegal'),
-            grupoId: +formData.get('grupoId')
+            profesor: formData.get('profesor'),
+            horas: +formData.get('horas')
         }
     });
 
@@ -181,7 +177,7 @@ async function eliminarAsignatura(formData) {
         }
     });
 
-    revalidatePath('/grupos');
+    revalidatePath('/estudiantes');
 }
 
 export { insertarGrupo, modificarGrupo, eliminarGrupo, insertarAlumno, modificarAlumno, eliminarAlumno, insertarAsignatura, modificarAsignatura, eliminarAsignatura };
